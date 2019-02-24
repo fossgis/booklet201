@@ -51,6 +51,7 @@ commands = {
 default_cmd = {"name": "???", "command": "\\abstractOther"}
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%S%z"
 RE_SINGLE_NEWLINE = re.compile("[^\\n]\\n", re.MULTILINE)
+RE_VALID_WORD = re.compile("^[-A-ZÄÖÜäöüa-z]{2,}$")
 
 def datetimeformat(value, format="%H:%M"):
     return value.strftime(format)
@@ -59,6 +60,24 @@ def escape_latex(source):
     result = source
     for pair in latex_substitutions:
         result = pair[0].sub(pair[1], result)
+    return result
+
+
+def get_wordlist(text):
+    words = text.replace("\r", "")
+    words = words.replace("\n", " ")
+    result = []
+    for word in words.split(" "):
+        if word is None or len(word) < 2:
+            continue
+        # remove punctuation characters at beginning and end
+        if word[0] in ("\"", "'", ".", ",", ";", ":", "[", "]", "(", ")", "-", "*"):
+            word = word[1:]
+        if word[-1] in ("\"", "'", ".", ",", ";", ":", "[", "]", "(", ")", "-", "*"):
+            word = word[:-1]
+        if RE_VALID_WORD.match(word) is None:
+            continue
+        result.append(word)
     return result
 
 
@@ -86,6 +105,7 @@ def talk2tex(template, item, last_timeslot):
 
 
 parser = argparse.ArgumentParser(description="convert Pretalx exports to LaTeX, output will be written to STDOUT")
+parser.add_argument("-f", "--format", help="output format, either 'tex', 'txt' or 'wordlist'", type=str)
 parser.add_argument("-w", "--workshops", help="workshops only", action="store_true")
 parser.add_argument("-d", "--day", help="day, format: YYYY-MM-DD")
 parser.add_argument("template", help="template to render")
@@ -136,11 +156,25 @@ jinja2_env = jinja2.Environment(
 )
 jinja2_env.filters["e"] = escape_latex
 jinja2_env.filters["datetimeformat"] = datetimeformat
-template = jinja2_env.get_template(os.path.basename(args.template))
+template = jinja2_env.get_template(os.path.basename(args.template)) if args.format == "tex" else None
 
 # render talks as LaTeX and write to file
 last_timeslot = ""
+wordlist = []
 for t in talks:
-    out = talk2tex(template, t, last_timeslot)
-    sys.stdout.write(out)
+    if args.format == "txt":
+        out = "{} {}\n".format(t["title"], t["abstract"])
+        sys.stdout.write(out)
+    elif args.format == "tex":
+        out = talk2tex(template, t, last_timeslot)
+        sys.stdout.write(out)
+    elif args.format == "wordlist":
+        out = "{} {}\n".format(t["title"], t["abstract"])
+        wordlist += get_wordlist(out)
+    else:
+        raise Exception("Output format {} is not supported.".format(args.format))
     last_timeslot = t["date"]
+
+if args.format == "wordlist":
+    wordlist.sort()
+    sys.stdout.write("\n".join(wordlist))
