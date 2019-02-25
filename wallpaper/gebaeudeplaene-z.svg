@@ -31,8 +31,8 @@
      showgrid="false"
      units="mm"
      inkscape:zoom="0.79055719"
-     inkscape:cx="153.83339"
-     inkscape:cy="411.01807"
+     inkscape:cx="193.20887"
+     inkscape:cy="355.37107"
      inkscape:window-x="0"
      inkscape:window-y="31"
      inkscape:window-maximized="1"
@@ -4003,7 +4003,7 @@
        y="160.84404"
        x="-419.27182"
        id="tspan12483"
-       sodipodi:role="line">2. Obergeschoss</tspan>
+       sodipodi:role="line">1. Obergeschoss</tspan>
   </text>
   <text
      xml:space="preserve"
@@ -4039,6 +4039,6 @@
        y="285.81271"
        x="-200.70818"
        id="tspan3713"
-       sodipodi:role="line">1.Obergeschoss</tspan>
+       sodipodi:role="line">Erdgeschoss</tspan>
   </text>
 </svg>

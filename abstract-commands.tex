@@ -25,6 +25,22 @@ height=169mm, contents={%
 \newpairofpagestyles[]{titlestyle}{}
 \AddLayersAtBeginOfPageStyle{titlestyle}{titlelayer}
 
+% page style for floor plan of S and M building
+\DeclareNewLayer[background, oddorevenpage, width=125mm,%
+height=169mm, contents={%
+  \includegraphics{wallpaper/gebaeudeplaene-s.pdf}%
+}]{gebaeudeplanslayer}
+\newpairofpagestyles[scrheadings]{gebaeudeplanStyleS}{}
+\AddLayersAtBeginOfPageStyle{gebaeudeplanStyleS}{gebaeudeplanslayer}
+
+% page style for floor plan of Z building
+\DeclareNewLayer[background, oddorevenpage, width=125mm,%
+height=169mm, contents={%
+  \includegraphics{wallpaper/gebaeudeplaene-z.pdf}%
+}]{gebaeudeplanzlayer}
+\newpairofpagestyles[scrheadings]{gebaeudeplanStyleZ}{}
+\AddLayersAtBeginOfPageStyle{gebaeudeplanStyleZ}{gebaeudeplanzlayer}
+
 % define alias commands for all three days
 \def\mittwoch{Mittwoch}
 \def\donnerstag{Donnerstag}
