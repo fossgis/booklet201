@@ -300,6 +300,10 @@ height=169mm, contents={%
   \abstractSponsorbox{#1}{#2}{#3}{#4}{\abstractsSection}%
 }
 
+%% store \parindent in separate variable because it is resetted to 0 in parboxes
+\newlength{\saveparindent}
+\setlength{\saveparindent}{\parindent}
+
 %% box for advertisment by a sponsor
 %% 1. logo
 %% 2. width of the logo
@@ -317,6 +321,7 @@ height=169mm, contents={%
     }%
     \fcolorbox{gray}{white}{%
       \parbox{\fboxwidth}{
+        \setlength{\parindent}{\saveparindent}%
         \@ifmtarg{#1}{}{%
           \begin{wrapfigure}[#3]{r}[0pt]{#2}
             \centering\vspace{-1\baselineskip}
